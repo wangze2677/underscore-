@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script>
+			(function(){
+				var root=this;//创建全局对象
+				
+				var previousUnderscore = root._;//_是全局的属性（变量），赋值给变量perviousUnderscore
+				
+				var breaker = {} //创建空对象，便于内部共享用
+				
+				var ArrayProto = Array.prototype,//将内置对象原型链缓存到局部变量，方便快速调用，便于代码压缩
+				ObjProto= Object.prototype,
+				FuncProto = Function.prototype;
+				
+				var slice=ArrayProto.slice,//将内置对象原型中的常用方法缓存到局部变量，方便快速调用，便于代码压缩
+				unshift= ArrayProto.unshift,
+				toString=ObjProto.toString,
+				hasOwnProperty = ObjProto.hasOwnProperty;
+				
+				//定义了一些js1.6 提供的新方法
+				//如果宿主环境中支持这些方法则优先调用，若没提供，就会由underscore来实现
+				var nativeForEach = ArrayProto.forEach,
+				nativeMap = ArrayProto.map,
+				nativeReduce = ArrayProto.reduce,
+				nativeReduceRight = ArrayProto.reduceRight,
+				nativeFilter = ArrayProto.filter,
+				nativeEvery = ArrayProto.ervey,
+				nativeSome = ArrayProto.some,
+				nativeIndexOf = ArrayProto.indexOf,
+				nativeLastIndexOf = ArrayProto.lastIndexOf,
+				nativeIsArray = Array.isArray,
+				nativeKeys = Object.keys,
+				nativeBind = FuncProto.bind;
+				
+				var _= function(obj){//创建对象式调用方法，将返回一个Underscore包装器，包装器对象的原型中
+					//包含Underscore所有方法(类似将DOM对象包装成一个jQuery对象)
+					return new wrapper(obj);
+				};
+				
+				//针对不同的宿主环境，将underscore的命名变量存放到不同的对象里
+				if( typeof exports !== 'undefined'){//node.js环境
+					if( typeof module !=='undefind' && module.exports){
+						exports = module.exports = _;
+					}
+					exports._=_;
+				}else{//浏览器环境中underscore的命名变量被挂在window对象中
+					root['_'] =_;
+				}
+				
+				//版本声明
+				_.VERSION = '1.3.3';
+				
+				//集合相关方法(数据和对象的通用处理方法)
+				
+				//迭代处理器，对集合中每一个元素执行处理器方法
+				var each = _.each = _.forEach =function(obj, iterator,context){
+					//不处理空值
+					if(obj == null) return;
+					if(nativeForEach && obj.forEach ===nativeForEach){
+						//如果宿主环境支持，则优先调用js1.6 提供的foreach方法
+						obj.forEach(iterator,context)
+					}
+				}
+				
+			}).call(this)
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>
